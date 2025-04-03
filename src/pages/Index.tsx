@@ -1,8 +1,8 @@
 
-import PDFBookReader from "@/components/PDFBookReader";
+import BookReader from "@/components/BookReader";
 
 const Index = () => {
-  return <PDFBookReader />;
+  return <BookReader />;
 };
 
 export default Index;
