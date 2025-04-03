@@ -1,12 +1,12 @@
 
-import React, { useState } from 'react';
+import React, { useState, useEffect } from 'react';
 import { ChevronLeft, ChevronRight, Book } from 'lucide-react';
 import { Button } from '@/components/ui/button';
 import BookContent from './BookContent';
 
 const BookReader: React.FC = () => {
   const [currentPage, setCurrentPage] = useState<number>(0);
-  const [displayMode, setDisplayMode] = useState<'single' | 'double'>('double');
+  const [isAnimating, setIsAnimating] = useState<boolean>(false);
   
   const bookContent = [
     "Chapter 1\n\nIt was the best of times, it was the worst of times, it was the age of wisdom, it was the age of foolishness, it was the epoch of belief, it was the epoch of incredulity, it was the season of Light, it was the season of Darkness, it was the spring of hope, it was the winter of despair.",
@@ -23,32 +23,23 @@ const BookReader: React.FC = () => {
   const totalPages = bookContent.length;
   
   const nextPage = () => {
-    if (displayMode === 'single') {
-      if (currentPage < totalPages - 1) {
+    if (currentPage < totalPages - 1 && !isAnimating) {
+      setIsAnimating(true);
+      setTimeout(() => {
         setCurrentPage(currentPage + 1);
-      }
-    } else {
-      if (currentPage + 1 < totalPages - 1) {
-        setCurrentPage(currentPage + 2);
-      }
+        setIsAnimating(false);
+      }, 600); // Half the animation duration to change page midway through
     }
   };
   
   const previousPage = () => {
-    if (displayMode === 'single') {
-      if (currentPage > 0) {
+    if (currentPage > 0 && !isAnimating) {
+      setIsAnimating(true);
+      setTimeout(() => {
         setCurrentPage(currentPage - 1);
-      }
-    } else {
-      if (currentPage > 1) {
-        setCurrentPage(currentPage - 2);
-      }
+        setIsAnimating(false);
+      }, 600);
     }
-  };
-  
-  const toggleDisplayMode = () => {
-    setDisplayMode(prevMode => prevMode === 'single' ? 'double' : 'single');
-    setCurrentPage(currentPage - (currentPage % 2)); // Ensure even page number for double mode
   };
   
   return (
@@ -61,43 +52,36 @@ const BookReader: React.FC = () => {
         <p className="text-muted-foreground">by Charles Dickens</p>
       </div>
       
-      <div className="w-full max-w-5xl mx-auto mb-6 flex justify-between items-center px-4">
-        <Button variant="outline" onClick={() => setCurrentPage(0)}>
-          First Page
-        </Button>
-        
-        <Button variant="outline" onClick={toggleDisplayMode}>
-          {displayMode === 'single' ? 'Double Pages' : 'Single Page'}
-        </Button>
-      </div>
-      
       <div className="book-container mb-6">
         <BookContent 
           currentPage={currentPage} 
           content={bookContent} 
-          displayMode={displayMode} 
+          isAnimating={isAnimating}
+          direction={isAnimating ? "next" : "none"}
           onNextPage={nextPage} 
         />
       </div>
       
-      <div className="flex justify-between items-center w-full max-w-5xl mx-auto px-4">
+      <div className="flex justify-between items-center w-full max-w-md mx-auto px-4 mt-8">
         <Button 
           variant="outline" 
           onClick={previousPage} 
-          disabled={displayMode === 'single' ? currentPage <= 0 : currentPage <= 1}
+          disabled={currentPage <= 0 || isAnimating}
+          className="shadow-md hover:shadow-lg transition-all"
         >
           <ChevronLeft className="mr-2 h-4 w-4" />
           Previous
         </Button>
         
         <span className="text-sm">
-          Page {currentPage + 1}{displayMode === 'double' && currentPage > 0 ? `-${currentPage + 2}` : ''} of {totalPages}
+          Page {currentPage + 1} of {totalPages}
         </span>
         
         <Button 
           variant="outline" 
           onClick={nextPage} 
-          disabled={displayMode === 'single' ? currentPage >= totalPages - 1 : currentPage >= totalPages - 2}
+          disabled={currentPage >= totalPages - 1 || isAnimating}
+          className="shadow-md hover:shadow-lg transition-all"
         >
           Next
           <ChevronRight className="ml-2 h-4 w-4" />
