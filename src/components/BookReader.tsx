@@ -3,12 +3,15 @@ import React, { useState, useEffect } from 'react';
 import { ChevronLeft, ChevronRight, Download } from 'lucide-react';
 import { Button } from './ui/button';
 import BookContent from './BookContent';
+import ThemeToggle from './ThemeToggle';
+import { toast } from '@/hooks/use-toast';
 
 const BookReader: React.FC = () => {
   const [currentPage, setCurrentPage] = useState(0);
   const [content, setContent] = useState<string[]>([]);
   const [isAnimating, setIsAnimating] = useState(false);
   const [direction, setDirection] = useState<'next' | 'prev' | 'none'>('none');
+  const [isDarkTheme, setIsDarkTheme] = useState(true); // Default is dark theme (blue-black)
 
   useEffect(() => {
     // Sample book content - you can replace this with your own content
@@ -91,6 +94,15 @@ Thank you for reading BYTESTREAM!`
     setContent(sampleContent);
   }, []);
 
+  // Apply theme class to document body
+  useEffect(() => {
+    if (isDarkTheme) {
+      document.body.classList.add('dark');
+    } else {
+      document.body.classList.remove('dark');
+    }
+  }, [isDarkTheme]);
+
   const handlePreviousPage = () => {
     if (currentPage > 0 && !isAnimating) {
       setDirection('prev');
@@ -128,6 +140,19 @@ Thank you for reading BYTESTREAM!`
     // Clean up
     document.body.removeChild(a);
     URL.revokeObjectURL(url);
+
+    toast({
+      title: "Download Started",
+      description: "Your journal is being downloaded.",
+    });
+  };
+
+  const toggleTheme = () => {
+    setIsDarkTheme(!isDarkTheme);
+    toast({
+      title: `Theme Changed`,
+      description: `Switched to ${!isDarkTheme ? 'dark' : 'light'} theme.`,
+    });
   };
 
   return (
@@ -141,6 +166,10 @@ Thank you for reading BYTESTREAM!`
           />
         </div>
         <p className="text-muted-foreground">Computer Science and Engineering Journal</p>
+      </div>
+
+      <div className="flex justify-end mb-4">
+        <ThemeToggle isDark={isDarkTheme} onToggle={toggleTheme} />
       </div>
 
       <div className="book-container mb-6">
