@@ -1,90 +1,191 @@
 
 import React, { useState, useEffect } from 'react';
-import { ChevronLeft, ChevronRight, Book } from 'lucide-react';
-import { Button } from '@/components/ui/button';
+import { ChevronLeft, ChevronRight, Download } from 'lucide-react';
+import { Button } from './ui/button';
 import BookContent from './BookContent';
 
 const BookReader: React.FC = () => {
-  const [currentPage, setCurrentPage] = useState<number>(0);
-  const [isAnimating, setIsAnimating] = useState<boolean>(false);
-  
-  const bookContent = [
-    "Chapter 1\n\nIt was the best of times, it was the worst of times, it was the age of wisdom, it was the age of foolishness, it was the epoch of belief, it was the epoch of incredulity, it was the season of Light, it was the season of Darkness, it was the spring of hope, it was the winter of despair.",
-    "We had everything before us, we had nothing before us, we were all going direct to Heaven, we were all going direct the other way – in short, the period was so far like the present period, that some of its noisiest authorities insisted on its being received, for good or for evil, in the superlative degree of comparison only.",
-    "There was a king with a large jaw and a queen with a plain face, on the throne of England; there were a king with a large jaw and a queen with a fair face, on the throne of France. In both countries it was clearer than crystal to the lords of the State preserves of loaves and fishes, that things in general were settled for ever.",
-    "It was the year of Our Lord one thousand seven hundred and seventy-five. Spiritual revelations were conceded to England at that favoured period, as at this. Mrs. Southcott had recently attained her five-and-twentieth blessed birthday, of whom a prophetic private in the Life Guards had heralded the sublime appearance by announcing that arrangements were made for the swallowing up of London and Westminster.",
-    "Even the Cock-lane ghost had been laid only a round dozen of years, after rapping out its messages, as the spirits of this very year last past (supernaturally deficient in originality) rapped out theirs. Mere messages in the earthly order of events had lately come to the English Crown and People, from a congress of British subjects in America.",
-    "Chapter 2\n\nIt was the Dover road that lay, on a Friday night late in November, before the first of the persons with whom this history has business. The Dover road lay, as to him, beyond the Dover mail, as it lumbered up Shooter's Hill. He walked up hill in the mire by the side of the mail, as the rest of the passengers did; not because they had the least relish for walking exercise, under the circumstances, but because the hill, and the harness, and the mud, and the mail, were all so heavy.",
-    "That time was the exact time when we were perhaps too ready to say that there was a wide palpable distance between the peoples of the earth—a distance that prohibited not trade, of course, nor industry, nor such matters that were connected with the purse, but prohibited affection, and trust, and chivalry, and love and whatever might be by nature attached to such concepts—all of the more intimate exchanges of human discourse.",
-    "We were not technically at war, you understand. And yet the unavoidable feelings of hate and mistrust between the nations involved meant that innocent travelers might be started upon, or even detained, especially if they seemed in any way suspicious to the ordinary eye.",
-    "This traveler seemed not suspicion but terrible. Terrible in his beauty, his poise, his impossible blue eyes. The sort of blue that is sometimes seen in flowers but seldom on earth otherwise and certainly not in the eyes of men.",
-  ];
-  
-  const totalPages = bookContent.length;
-  
-  const nextPage = () => {
-    if (currentPage < totalPages - 1 && !isAnimating) {
-      setIsAnimating(true);
-      setTimeout(() => {
-        setCurrentPage(currentPage + 1);
-        setIsAnimating(false);
-      }, 600); // Half the animation duration to change page midway through
-    }
-  };
-  
-  const previousPage = () => {
+  const [currentPage, setCurrentPage] = useState(0);
+  const [content, setContent] = useState<string[]>([]);
+  const [isAnimating, setIsAnimating] = useState(false);
+  const [direction, setDirection] = useState<'next' | 'prev' | 'none'>('none');
+
+  useEffect(() => {
+    // Sample book content - you can replace this with your own content
+    const sampleContent = [
+      `# BYTESTREAM
+
+Computer Science and Engineering
+
+Welcome to the digital edition of BYTESTREAM, the official journal of the Computer Science Department at Mandsaur University.
+
+This edition explores the cutting-edge developments in computer science and engineering, featuring research articles, student projects, and faculty insights.`,
+      
+      `## Introduction to the Edition
+
+In this digital age, the field of computer science continues to evolve at an unprecedented pace. From artificial intelligence to quantum computing, innovations emerge daily that reshape our technological landscape.
+
+The BYTESTREAM journal aims to capture these developments and provide a platform for students and faculty to showcase their research and ideas.`,
+      
+      `## Featured Article: Machine Learning Applications
+
+Machine Learning has transformed how we approach complex problems. This article explores recent applications in:
+
+1. Healthcare diagnostics
+2. Financial forecasting
+3. Environmental monitoring
+4. Educational technology
+
+Each area demonstrates the versatility and power of algorithmic learning.`,
+      
+      `## Student Innovations
+
+This section highlights extraordinary projects developed by our students:
+
+- Smart Campus Initiative: IoT-based campus management system
+- AlgoViz: Algorithm visualization platform for educational purposes
+- EcoTrack: Environmental monitoring application using distributed sensors
+- SecurityPlus: Advanced encryption techniques for mobile applications`,
+      
+      `## Faculty Research Spotlight
+
+Our distinguished faculty members are leading research in:
+
+- Quantum Computing
+- Cybersecurity
+- Data Science
+- Human-Computer Interaction
+
+Their work continues to push the boundaries of what's possible in computer science.`,
+      
+      `## Upcoming Events
+
+- Annual Hackathon: May 15-17, 2025
+- Tech Conference: June 10, 2025
+- Summer Code Camp: July 5-20, 2025
+
+Join us for these exciting opportunities to learn, collaborate, and innovate!`,
+      
+      `## Career Resources
+
+The department offers various resources to help students prepare for their careers:
+
+- Resume workshops
+- Technical interview preparation
+- Industry mentorship program
+- Internship opportunities
+
+Visit the department website for more information.`,
+      
+      `## Contact Information
+
+Department of Computer Science
+Mandsaur University
+Email: cs@mandsauruniversity.edu
+Phone: +91-123-456-7890
+Website: www.mandsauruniversity.edu/cs
+
+Thank you for reading BYTESTREAM!`
+    ];
+    
+    setContent(sampleContent);
+  }, []);
+
+  const handlePreviousPage = () => {
     if (currentPage > 0 && !isAnimating) {
+      setDirection('prev');
       setIsAnimating(true);
       setTimeout(() => {
         setCurrentPage(currentPage - 1);
         setIsAnimating(false);
-      }, 600);
+      }, 600); // Half the animation duration
     }
   };
-  
+
+  const handleNextPage = () => {
+    if (currentPage < content.length - 1 && !isAnimating) {
+      setDirection('next');
+      setIsAnimating(true);
+      setTimeout(() => {
+        setCurrentPage(currentPage + 1);
+        setIsAnimating(false);
+      }, 600); // Half the animation duration
+    }
+  };
+
+  const handleDownload = () => {
+    // Create a text blob from the content
+    const blob = new Blob([content.join('\n\n')], { type: 'text/plain' });
+    const url = URL.createObjectURL(blob);
+    
+    // Create a temporary link and trigger download
+    const a = document.createElement('a');
+    a.href = url;
+    a.download = 'BYTESTREAM_Journal.txt';
+    document.body.appendChild(a);
+    a.click();
+    
+    // Clean up
+    document.body.removeChild(a);
+    URL.revokeObjectURL(url);
+  };
+
   return (
-    <div className="container mx-auto px-4 py-8">
+    <div className="container mx-auto px-4 py-8 bg-background text-foreground">
       <div className="text-center mb-10">
-        <h1 className="text-3xl font-bold mb-2 flex items-center justify-center gap-2">
-          <Book className="h-8 w-8 text-primary" />
-          A Tale of Two Cities
-        </h1>
-        <p className="text-muted-foreground">by Charles Dickens</p>
+        <div className="flex justify-center mb-4">
+          <img 
+            src="/lovable-uploads/7563b92e-f269-47d5-811f-abeb6ed420a1.png" 
+            alt="BYTESTREAM Logo" 
+            className="h-16 md:h-24" 
+          />
+        </div>
+        <p className="text-muted-foreground">Computer Science and Engineering Journal</p>
       </div>
-      
+
       <div className="book-container mb-6">
         <BookContent 
           currentPage={currentPage} 
-          content={bookContent} 
+          content={content} 
           isAnimating={isAnimating}
-          direction={isAnimating ? "next" : "none"}
-          onNextPage={nextPage} 
+          direction={direction}
+          onNextPage={handleNextPage}
         />
       </div>
-      
-      <div className="flex justify-between items-center w-full max-w-md mx-auto px-4 mt-8">
+
+      <div className="flex justify-between items-center max-w-2xl mx-auto mt-8">
         <Button 
           variant="outline" 
-          onClick={previousPage} 
+          onClick={handlePreviousPage} 
           disabled={currentPage <= 0 || isAnimating}
-          className="shadow-md hover:shadow-lg transition-all"
+          className="bg-secondary hover:bg-secondary/80 text-secondary-foreground"
         >
           <ChevronLeft className="mr-2 h-4 w-4" />
           Previous
         </Button>
         
-        <span className="text-sm">
-          Page {currentPage + 1} of {totalPages}
-        </span>
+        <div className="text-sm">
+          Page {currentPage + 1} of {content.length}
+        </div>
         
         <Button 
           variant="outline" 
-          onClick={nextPage} 
-          disabled={currentPage >= totalPages - 1 || isAnimating}
-          className="shadow-md hover:shadow-lg transition-all"
+          onClick={handleNextPage} 
+          disabled={currentPage >= content.length - 1 || isAnimating}
+          className="bg-secondary hover:bg-secondary/80 text-secondary-foreground"
         >
           Next
           <ChevronRight className="ml-2 h-4 w-4" />
+        </Button>
+      </div>
+      
+      <div className="flex justify-center mt-6">
+        <Button 
+          onClick={handleDownload}
+          className="bg-primary hover:bg-primary/90 text-primary-foreground"
+        >
+          <Download className="mr-2 h-4 w-4" />
+          Download Journal
         </Button>
       </div>
     </div>

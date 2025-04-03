@@ -5,33 +5,33 @@
 
 @layer base {
   :root {
-    --background: 40 36% 98%;
-    --foreground: 30 6% 15%;
+    --background: 210 33% 9%;
+    --foreground: 210 20% 98%;
 
-    --card: 24 33% 97%;
-    --card-foreground: 30 6% 15%;
+    --card: 210 29% 12%;
+    --card-foreground: 210 20% 98%;
 
-    --popover: 0 0% 100%;
-    --popover-foreground: 30 6% 15%;
+    --popover: 210 33% 9%;
+    --popover-foreground: 210 20% 98%;
 
-    --primary: 28 62% 45%;
-    --primary-foreground: 24 9% 98%;
+    --primary: 210 100% 52%;
+    --primary-foreground: 210 20% 98%;
 
-    --secondary: 30 5% 92%;
-    --secondary-foreground: 28 4% 15%;
+    --secondary: 210 20% 26%;
+    --secondary-foreground: 210 20% 98%;
 
-    --muted: 30 5% 92%;
-    --muted-foreground: 28 4% 45%;
+    --muted: 210 20% 26%;
+    --muted-foreground: 210 20% 70%;
 
-    --accent: 28 40% 92%;
-    --accent-foreground: 28 62% 45%;
+    --accent: 210 100% 40%;
+    --accent-foreground: 210 20% 98%;
 
     --destructive: 0 84.2% 60.2%;
     --destructive-foreground: 0 0% 98%;
 
-    --border: 30 10% 85%;
-    --input: 30 10% 85%;
-    --ring: 28 62% 65%;
+    --border: 210 20% 26%;
+    --input: 210 20% 26%;
+    --ring: 210 100% 52%;
 
     --radius: 0.5rem;
   }
@@ -83,6 +83,10 @@
     perspective: 2000px;
     height: 60vh;
     min-height: 500px;
+    box-shadow: 0 25px 50px -12px rgba(0, 0, 0, 0.5);
+    background: linear-gradient(to bottom, rgba(33, 59, 85, 0.8), rgba(15, 23, 42, 0.9));
+    padding: 10px;
+    border: 1px solid rgba(59, 130, 246, 0.2);
   }
 
   .book {
@@ -94,12 +98,44 @@
     @apply w-full h-full bg-card border border-border;
     backface-visibility: hidden;
     transform-style: preserve-3d;
-    box-shadow: 0 4px 8px rgba(0, 0, 0, 0.1);
+    box-shadow: 0 4px 8px rgba(0, 0, 0, 0.3);
+    background: linear-gradient(to right, rgba(30, 41, 59, 0.9), rgba(30, 41, 59, 0.7));
   }
 
   .page-content {
     @apply px-8 py-10 h-full overflow-auto;
-    background: linear-gradient(to right, rgba(0,0,0,0.03) 0%, rgba(0,0,0,0) 10%, rgba(0,0,0,0) 90%, rgba(0,0,0,0.03) 100%);
+    background: linear-gradient(to right, rgba(0,0,0,0.1) 0%, rgba(0,0,0,0) 10%, rgba(0,0,0,0) 90%, rgba(0,0,0,0.1) 100%);
+    color: rgba(226, 232, 240, 0.95);
+    font-size: 1rem;
+    line-height: 1.8;
+  }
+
+  .page-content h1, .page-content h2, .page-content h3 {
+    @apply text-primary font-bold mb-4;
+  }
+
+  .page-content h1 {
+    @apply text-2xl md:text-3xl;
+  }
+
+  .page-content h2 {
+    @apply text-xl md:text-2xl;
+  }
+
+  .page-content h3 {
+    @apply text-lg md:text-xl;
+  }
+
+  .page-content p {
+    @apply mb-4;
+  }
+
+  .page-content ul, .page-content ol {
+    @apply pl-6 mb-4;
+  }
+
+  .page-content li {
+    @apply mb-1;
   }
 
   .turn-animation {
@@ -115,6 +151,7 @@
     @apply absolute bottom-4 text-sm text-muted-foreground;
     left: 50%;
     transform: translateX(-50%);
+    color: rgba(148, 163, 184, 0.8);
   }
 
   @keyframes turnPage {
